@@ -1,5 +1,5 @@
 import { db, notes, type Note, type NewNote } from "~/db/schema";
-import { sql } from "drizzle-orm";
+import { desc, sql } from "drizzle-orm";
 
 export async function createNote(data: NewNote): Promise<Note> {
   const [note] = await db.insert(notes).values(data).returning();
@@ -22,6 +22,7 @@ export async function getNotesByUserId(
     .select()
     .from(notes)
     .where(sql`${notes.userId} = ${userId}`)
+    .orderBy(desc(notes.isStarred), desc(notes.createdAt))
     .limit(limit)
     .offset(offset);
 
@@ -34,6 +35,26 @@ export async function getNotesByUserId(
     notes: notesList,
     totalCount: count,
   };
+}
+
+export async function toggleNoteStar(noteId: number, userId: number): Promise<Note | null> {
+  const [currentNote] = await db
+    .select()
+    .from(notes)
+    .where(sql`${notes.id} = ${noteId} AND ${notes.userId} = ${userId}`)
+    .limit(1);
+
+  if (!currentNote) {
+    return null;
+  }
+
+  const [updatedNote] = await db
+    .update(notes)
+    .set({ isStarred: !currentNote.isStarred })
+    .where(sql`${notes.id} = ${noteId} AND ${notes.userId} = ${userId}`)
+    .returning();
+
+  return updatedNote || null;
 }
 
 export async function updateNote(
