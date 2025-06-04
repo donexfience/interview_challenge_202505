@@ -109,7 +109,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     limit,
     offset,
   });
-  console.log(totalCount, "toal count");
   const totalPages = Math.ceil(totalCount / limit);
 
   return json({ notes, page, limit, totalCount, totalPages });
@@ -195,7 +194,11 @@ export default function NotesIndexPage() {
                 </Button>
               </CardHeader>
               <CardContent>
-                <NoteForm onSuccess={() => setIsOpen(false)} />
+                <NoteForm
+                  onSuccess={() => {
+                    setIsOpen(false);
+                  }}
+                />
               </CardContent>
             </Card>
           ) : null}

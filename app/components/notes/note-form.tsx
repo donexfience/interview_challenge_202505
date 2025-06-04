@@ -20,13 +20,19 @@ export function NoteForm({ defaultValues = {}, onSuccess }: NoteFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
   const isSubmitting = navigation.state === "submitting";
+  const wasSubmitting = useRef(false);
 
   useEffect(() => {
-    if (actionData?.success) {
+    if (isSubmitting) {
+      wasSubmitting.current = true;
+    }
+
+    if (wasSubmitting.current && !isSubmitting && actionData?.success) {
       formRef.current?.reset();
       onSuccess?.();
+      wasSubmitting.current = false;
     }
-  }, [actionData?.success, onSuccess]);
+  }, [isSubmitting, actionData?.success, onSuccess]);
 
   return (
     <Form ref={formRef} method="post" className="space-y-4">
