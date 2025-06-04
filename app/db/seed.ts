@@ -23,7 +23,7 @@ function getRandomDate(): Date {
   const end = new Date().getTime();
   return new Date(start + Math.random() * (end - start));
 }
-
+  
 // Function to generate a note title
 function generateNoteTitle(): string {
   // Randomly choose between different title types
