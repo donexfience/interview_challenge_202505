@@ -1,21 +1,8 @@
-import {
-  json,
-  LoaderFunctionArgs,
-  redirect,
-  type ActionFunctionArgs,
-} from "@remix-run/node";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { useActionData, useNavigation } from "@remix-run/react";
 import { LoginForm } from "~/components/auth/login-form";
 import { authenticateUser } from "~/services/auth.server";
-import { createUserSession, getUserSession } from "~/services/session.server";
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getUserSession(request);
-  if (user) {
-    return redirect("/notes");
-  }
-  return null;
-}
+import { createUserSession } from "~/services/session.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();

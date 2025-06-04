@@ -34,6 +34,7 @@ export async function requireAuthPage(
   redirectTo: string = new URL(request.url).pathname
 ) {
   const userId = await getUserId(request);
+  console.log(userId,"user id middleware")
   if (!userId) {
     const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
     throw redirect(`/login?${searchParams}`);

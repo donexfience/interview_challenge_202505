@@ -22,6 +22,10 @@ export async function getSession(request: Request) {
 export async function createUserSession(userId: number, redirectTo: string) {
   const session = await sessionStorage.getSession();
   session.set("userId", userId);
+  console.log(
+    session,
+    "session after setting useridssssssssssssssssssssssssssssssssssssssssssss"
+  );
 
   return new Response(null, {
     status: 302,
@@ -57,9 +61,9 @@ export async function requireUserId(
   return userId;
 }
 
-// Log out user
 export async function logout(request: Request) {
   const session = await getSession(request);
+  console.log(session.data.userId);
   return new Response(null, {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
